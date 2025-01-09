@@ -1,10 +1,16 @@
 package main
 
-import "fmt"
+import (
+    "fmt"
+    "os"
+)
 
-import "rsc.io/quote"
+func GenerateTitle(name string) string {
+    message := fmt.Sprintf("Hello, %s! 👋", name)
+    return message
+}
 
 func main() {
-    fmt.Println(quote.Go())
+    fmt.Println(GenerateTitle(os.Args[1]))
 }
 
