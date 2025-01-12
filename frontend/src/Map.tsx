@@ -1,10 +1,12 @@
 import { onMount, createSignal } from 'solid-js'
-import L from 'leaflet';
+import L, { Map } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
-export const Map = () => {
-  const creationMode = true;
-  const [polygon, setPolygon] = createSignal([]);
+interface Props {
+  init: (Map) => void;
+}
+
+export const BaseMap = (props) => {
   onMount(() => {
     const map = L.map('map', {
       center: L.latLng(60.168093, 24.941437),
@@ -16,25 +18,7 @@ export const Map = () => {
       ],
     });
 
-    if (creationMode) {
-      let mapPolygon = null;
-      map.on('click', (e) => {
-        if (mapPolygon) {
-          mapPolygon.remove();
-        }
-        setPolygon([...polygon(), e.latlng]);
-        mapPolygon = L.polygon(polygon(), {color: 'red'});
-        mapPolygon.addTo(map);
-      });
-    } else {
-      let answerMarker = null;
-      map.on('click', (e) => {
-        if (answerMarker) {
-          answerMarker.remove();
-        }
-        answerMarker = new L.marker(e.latlng).addTo(map);
-      });
-    }
+    props.init(map);
 
     const layer = L.tileLayer('https://tile.openstreetmap.bzh/ca/{z}/{x}/{y}.png', {
 	maxZoom: 16,
@@ -44,3 +28,32 @@ export const Map = () => {
   })
   return <div id="map" style="height: 400px;"></div>;
 };
+
+export const QuestionMap = () => {
+  const init = (map: Map) => {
+    let answerMarker = null;
+    map.on('click', (e) => {
+      if (answerMarker) {
+        answerMarker.remove();
+      }
+      answerMarker = new L.marker(e.latlng).addTo(map);
+    });
+  };
+  return <BaseMap init={init} />
+}
+
+export const CreateQuestionMap = () => {
+  const [polygon, setPolygon] = createSignal([]);
+  const init = (map: Map) => {
+    let mapPolygon = null;
+    map.on('click', (e) => {
+      if (mapPolygon) {
+        mapPolygon.remove();
+      }
+      setPolygon([...polygon(), e.latlng]);
+      mapPolygon = L.polygon(polygon(), {color: 'red'});
+      mapPolygon.addTo(map);
+    });
+  };
+  return <><BaseMap init={init} /><input type="text" value={JSON.stringify(polygon().map((point) => [point.lat, point.lng]))} /></>
+}
