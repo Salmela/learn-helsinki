@@ -20,6 +20,9 @@ export const WelcomeView = () => {
         <button onClick={() => navigate("/question")}>
           Are you ready
         </button>
+        <button onClick={() => navigate("/new_question")}>
+          Create new question
+        </button>
       </div>
     </>
   )

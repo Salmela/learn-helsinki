@@ -1,8 +1,10 @@
-import { onMount } from 'solid-js'
+import { onMount, createSignal } from 'solid-js'
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
 export const Map = () => {
+  const creationMode = true;
+  const [polygon, setPolygon] = createSignal([]);
   onMount(() => {
     const map = L.map('map', {
       center: L.latLng(60.168093, 24.941437),
@@ -14,13 +16,25 @@ export const Map = () => {
       ],
     });
 
-    let answerMarker = null;
-    map.on('click', (e) => {
-      if (answerMarker) {
-        answerMarker.remove();
-      }
-      answerMarker = new L.marker(e.latlng).addTo(map);
-    });
+    if (creationMode) {
+      let mapPolygon = null;
+      map.on('click', (e) => {
+        if (mapPolygon) {
+          mapPolygon.remove();
+        }
+        setPolygon([...polygon(), e.latlng]);
+        mapPolygon = L.polygon(polygon(), {color: 'red'});
+        mapPolygon.addTo(map);
+      });
+    } else {
+      let answerMarker = null;
+      map.on('click', (e) => {
+        if (answerMarker) {
+          answerMarker.remove();
+        }
+        answerMarker = new L.marker(e.latlng).addTo(map);
+      });
+    }
 
     const layer = L.tileLayer('https://tile.openstreetmap.bzh/ca/{z}/{x}/{y}.png', {
 	maxZoom: 16,
