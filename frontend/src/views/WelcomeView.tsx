@@ -1,7 +1,6 @@
 import { useNavigate } from "@solidjs/router";
-import solidLogo from "./assets/solid.svg";
+import solidLogo from "../assets/solid.svg";
 import viteLogo from "/vite.svg";
-import "./App.css";
 
 export const WelcomeView = () => {
   const navigate = useNavigate();

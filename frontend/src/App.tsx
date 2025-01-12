@@ -1,7 +1,8 @@
 import { Router, Route } from "@solidjs/router";
-import { WelcomeView } from "./WelcomeView";
-import { QuestionView } from "./QuestionView";
-import { CreateNewQuestionView } from "./CreateNewQuestionView";
+import { WelcomeView } from "./views/WelcomeView";
+import { QuestionView } from "./views/QuestionView";
+import { CreateNewQuestionView } from "./views/CreateNewQuestionView";
+import "./App.css";
 
 const App = () => {
   return (

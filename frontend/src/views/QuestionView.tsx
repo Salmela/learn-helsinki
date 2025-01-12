@@ -1,8 +1,5 @@
 import { useNavigate } from "@solidjs/router";
-import solidLogo from "./assets/solid.svg";
-import viteLogo from "/vite.svg";
-import { QuestionMap } from "./Map";
-import "./App.css";
+import { QuestionMap } from "../components/Map";
 
 export const QuestionView = () => {
   const navigate = useNavigate();
