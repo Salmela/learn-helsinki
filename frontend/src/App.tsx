@@ -1,7 +1,7 @@
 import { Router, Route } from "@solidjs/router";
-import { WelcomeView } from './WelcomeView'
-import { QuestionView } from './QuestionView'
-import { CreateNewQuestionView } from './CreateNewQuestionView'
+import { WelcomeView } from "./WelcomeView";
+import { QuestionView } from "./QuestionView";
+import { CreateNewQuestionView } from "./CreateNewQuestionView";
 
 const App = () => {
   return (
@@ -10,7 +10,7 @@ const App = () => {
       <Route path="/question" component={QuestionView} />
       <Route path="/new_question" component={CreateNewQuestionView} />
     </Router>
-  )
-}
+  );
+};
 
-export default App
+export default App;
