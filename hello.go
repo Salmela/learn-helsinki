@@ -4,7 +4,9 @@ import (
 	"context"
 	"fmt"
 	"github.com/jackc/pgx/v5"
+	"io/ioutil"
 	"log"
+	"net/http"
 	"os"
 )
 
@@ -19,13 +21,26 @@ func main() {
 	}
 	defer conn.Close(context.Background())
 
-	if len(os.Args) > 1 {
-		result, err := generateTitle(os.Args[1])
-		if err != nil {
-			log.Fatal(err)
-		}
-		fmt.Println(result)
-	} else {
-		fmt.Printf("USAGE: %s NAME\n", os.Args[0])
+	fmt.Printf("Starting server at port 0.0.0.0:8082\n")
+
+	mux_serve := http.NewServeMux()
+	server := &http.Server{
+		Addr:    ":8082",
+		Handler: mux_serve,
 	}
+
+	mux_serve.HandleFunc("/questions", func(response http.ResponseWriter, request *http.Request) {
+		if request.Method == "POST" {
+			body, err := ioutil.ReadAll(request.Body)
+			if err != nil {
+				log.Fatal(err)
+				return
+			}
+			fmt.Fprintf(response, string(body))
+		} else {
+			fmt.Fprintf(response, "[[60.17289589344101,24.93902919252459],[60.173002620382846,24.943321029970306],[60.17195668140074,24.94338540753199],[60.17193533536047,24.94254849923009],[60.17072926155439,24.94269871354068],[60.17071858813724,24.94029528457108],[60.17225552450813,24.940166529447716],[60.17226619742596,24.93902919252459]]")
+		}
+	})
+
+	log.Fatal(server.ListenAndServe())
 }
