@@ -21,15 +21,18 @@ func main() {
 	}
 	defer conn.Close(context.Background())
 
-	fmt.Printf("Starting server at port 0.0.0.0:8082\n")
+	address := ":8082"
+	fmt.Printf("Starting server at port %s\n", address)
 
 	mux_serve := http.NewServeMux()
 	server := &http.Server{
-		Addr:    ":8082",
+		Addr:    address,
 		Handler: mux_serve,
 	}
 
 	mux_serve.HandleFunc("/questions", func(response http.ResponseWriter, request *http.Request) {
+		response.Header().Set("Access-Control-Allow-Origin", "*")
+
 		if request.Method == "POST" {
 			body, err := ioutil.ReadAll(request.Body)
 			if err != nil {
@@ -38,7 +41,8 @@ func main() {
 			}
 			fmt.Fprintf(response, string(body))
 		} else {
-			fmt.Fprintf(response, "[[60.17289589344101,24.93902919252459],[60.173002620382846,24.943321029970306],[60.17195668140074,24.94338540753199],[60.17193533536047,24.94254849923009],[60.17072926155439,24.94269871354068],[60.17071858813724,24.94029528457108],[60.17225552450813,24.940166529447716],[60.17226619742596,24.93902919252459]]")
+			// We are sending the answer polygon to frontend which is not really secure nor necessary, but it makes the code easier for now
+			fmt.Fprintf(response, "{\"type\": \"where\", \"subject\": \"steissi\", \"answer\": [[60.17289589344101,24.93902919252459],[60.173002620382846,24.943321029970306],[60.17195668140074,24.94338540753199],[60.17193533536047,24.94254849923009],[60.17072926155439,24.94269871354068],[60.17071858813724,24.94029528457108],[60.17225552450813,24.940166529447716],[60.17226619742596,24.93902919252459]]}")
 		}
 	})
 

@@ -6,6 +6,11 @@ interface Props {
   init: (Map) => void;
 }
 
+export interface Coordinate {
+  lat: number;
+  lng: number;
+}
+
 export const BaseMap = (props) => {
   onMount(() => {
     const map = L.map("map", {
@@ -34,7 +39,7 @@ export const BaseMap = (props) => {
 };
 
 export const QuestionMap = (props: {
-  setLocation: (location: { lat: number; lng: number }) => void;
+  setLocation: (location: Coordinate) => void;
 }) => {
   const init = (map: Map) => {
     let answerMarker = null;
@@ -49,26 +54,21 @@ export const QuestionMap = (props: {
   return <BaseMap init={init} />;
 };
 
-export const CreateQuestionMap = () => {
-  const [polygon, setPolygon] = createSignal([]);
+export const CreateQuestionMap = (props: {
+  setPolygon: (points: Coordinate[]) => void;
+}) => {
   const init = (map: Map) => {
     let mapPolygon = null;
+    let points = [];
     map.on("click", (e) => {
       if (mapPolygon) {
         mapPolygon.remove();
       }
-      setPolygon([...polygon(), e.latlng]);
-      mapPolygon = L.polygon(polygon(), { color: "red" });
+      points.push(e.latlng);
+      props.setPolygon(points);
+      mapPolygon = L.polygon(points, { color: "red" });
       mapPolygon.addTo(map);
     });
   };
-  return (
-    <>
-      <BaseMap init={init} />
-      <input
-        type="text"
-        value={JSON.stringify(polygon().map((point) => [point.lat, point.lng]))}
-      />
-    </>
-  );
+  return <BaseMap init={init} />;
 };

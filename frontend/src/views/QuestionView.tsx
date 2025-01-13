@@ -1,11 +1,8 @@
 import { createSignal } from "solid-js";
 import { useNavigate } from "@solidjs/router";
-import { QuestionMap } from "../components/Map";
+import { QuestionMap, Coordinate } from "../components/Map";
 
-const pointInPolygon = (
-  location: { lat: number; lng: number },
-  polygon: { lat: number; lng: number }[],
-) => {
+const pointInPolygon = (location: Coordinate, polygon: Coordinate[]) => {
   // Cast ray to the right from the location and check if it hits any polygon lines
   let intersections = 0;
 
@@ -35,7 +32,7 @@ const pointInPolygon = (
 
 export const QuestionView = () => {
   const navigate = useNavigate();
-  const [response, setResponse] = createSignal();
+  const [response, setResponse] = createSignal<Coordinate | null>(null);
   const polygon = [
     [60.17289589344101, 24.93902919252459],
     [60.173002620382846, 24.943321029970306],
