@@ -1,9 +1,9 @@
-import { onMount, createSignal } from "solid-js";
-import L, { Map } from "leaflet";
+import { onMount } from "solid-js";
+import L, { Map, Marker, Polygon } from "leaflet";
 import "leaflet/dist/leaflet.css";
 
 interface Props {
-  init: (Map) => void;
+  init: (map: Map) => void;
 }
 
 export interface Coordinate {
@@ -11,7 +11,7 @@ export interface Coordinate {
   lng: number;
 }
 
-export const BaseMap = (props) => {
+export const BaseMap = (props: Props) => {
   onMount(() => {
     const map = L.map("map", {
       center: L.latLng(60.168093, 24.941437),
@@ -42,13 +42,14 @@ export const QuestionMap = (props: {
   setLocation: (location: Coordinate) => void;
 }) => {
   const init = (map: Map) => {
-    let answerMarker = null;
+    let answerMarker: Marker | null = null;
     map.on("click", (e) => {
       if (answerMarker) {
         answerMarker.remove();
       }
       props.setLocation(e.latlng);
-      answerMarker = new L.marker(e.latlng).addTo(map);
+      answerMarker = L.marker(e.latlng);
+      answerMarker.addTo(map);
     });
   };
   return <BaseMap init={init} />;
@@ -58,8 +59,8 @@ export const CreateQuestionMap = (props: {
   setPolygon: (points: Coordinate[]) => void;
 }) => {
   const init = (map: Map) => {
-    let mapPolygon = null;
-    let points = [];
+    let mapPolygon: Polygon | null = null;
+    let points: Coordinate[] = [];
     map.on("click", (e) => {
       if (mapPolygon) {
         mapPolygon.remove();
