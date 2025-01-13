@@ -33,13 +33,16 @@ export const BaseMap = (props) => {
   return <div id="map" style="height: 400px;"></div>;
 };
 
-export const QuestionMap = () => {
+export const QuestionMap = (props: {
+  setLocation: (location: { lat: number; lng: number }) => void;
+}) => {
   const init = (map: Map) => {
     let answerMarker = null;
     map.on("click", (e) => {
       if (answerMarker) {
         answerMarker.remove();
       }
+      props.setLocation(e.latlng);
       answerMarker = new L.marker(e.latlng).addTo(map);
     });
   };
