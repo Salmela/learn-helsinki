@@ -9,15 +9,16 @@ export const CreateNewQuestionView = () => {
 
   const createQuestion = async () => {
     console.log(polygon);
-    await fetch("http://localhost:8082/questions", {
+    const response = fetch("http://localhost:8082/questions", {
       method: "POST",
       body: JSON.stringify({
         type: "where",
         subject: subject(),
-        answer: polygon(),
+        // TODO I would prefer not to stringify here, but I haven't figured how to handle arbitrary json in go
+        answer: JSON.stringify(polygon()),
       }),
     });
-    alert("Correct or not correct? Who knows?");
+    response.then(() => alert("The new question is saved")).catch(() => alert("Server error happened"));
   };
   return (
     <>
