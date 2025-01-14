@@ -2,18 +2,18 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"io/ioutil"
 	"log"
-	"encoding/json"
 	"net/http"
 )
 
 type QuestionCreationRequest struct {
-	Type string
+	Type    string
 	Subject string
-	Answer string
+	Answer  string
 }
 
 func initDatabase(connection *pgxpool.Pool) {
@@ -53,7 +53,7 @@ func main() {
 			if err != nil {
 				log.Panicf("Reading response body failed: %v\n", err)
 			}
-			var parsedBody QuestionCreationRequest;
+			var parsedBody QuestionCreationRequest
 			err2 := json.Unmarshal(body, &parsedBody)
 			if err2 != nil {
 				log.Panicf("Parsing failed: %v\n", err2)
