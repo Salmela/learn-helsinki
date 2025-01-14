@@ -1,6 +1,9 @@
+import { styled } from "solid-styled-components";
 import { createSignal } from "solid-js";
 import { useNavigate } from "@solidjs/router";
 import { CreateQuestionMap, Coordinate } from "../components/Map";
+import { Button, PrimaryButton, ButtonRow } from "../components/Button";
+import { TextInput } from "../components/Input";
 
 export const CreateNewQuestionView = () => {
   const navigate = useNavigate();
@@ -21,25 +24,26 @@ export const CreateNewQuestionView = () => {
     response.then(() => alert("The new question is saved")).catch(() => alert("Server error happened"));
   };
   return (
-    <>
+    <div>
       <h1>Create new question</h1>
-      <input
+      <FullWidthInput
         type="text"
-        placeholder="Question text"
+        placeholder="Name of the place"
         value={subject()}
         onInput={(event) => setSubject(event.target.value)}
       />
+      <h2>The answer</h2>
       <CreateQuestionMap setPolygon={setPolygon} />
-      <input
-        type="text"
-        value={JSON.stringify(polygon().map((point) => [point.lat, point.lng]))}
-      />
-      <div class="card">
-        <button onClick={() => navigate("/")}>Back</button>
-        <button disabled={!polygon()} onClick={createQuestion}>
+      <ButtonRow>
+        <Button onClick={() => navigate("/")}>Back</Button>
+        <PrimaryButton disabled={!polygon()} onClick={createQuestion}>
           Create
-        </button>
-      </div>
-    </>
+        </PrimaryButton>
+      </ButtonRow>
+    </div>
   );
 };
+
+const FullWidthInput = styled(TextInput)(`
+  width: 100%;
+`);

@@ -1,6 +1,7 @@
 import { createSignal } from "solid-js";
 import { useNavigate } from "@solidjs/router";
 import { QuestionMap, Coordinate } from "../components/Map";
+import { Button, PrimaryButton, ButtonRow } from "../components/Button";
 
 const pointInPolygon = (location: Coordinate | null, polygon: Coordinate[]) => {
   // Cast ray to the right from the location and check if it hits any polygon lines
@@ -48,17 +49,17 @@ export const QuestionView = () => {
     <>
       <h1>Where is Steissi?</h1>
       <QuestionMap setLocation={setResponse} />
-      <div class="card">
-        <button onClick={() => navigate("/")}>Give up</button>
-        <button
+      <ButtonRow>
+        <Button onClick={() => navigate("/")}>Give up</Button>
+        <PrimaryButton
           disabled={!response()}
           onClick={() =>
             alert(pointInPolygon(response(), polygon) ? "Correct" : "Incorrect")
           }
         >
           Check
-        </button>
-      </div>
+        </PrimaryButton>
+      </ButtonRow>
     </>
   );
 };

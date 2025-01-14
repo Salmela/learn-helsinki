@@ -1,8 +1,9 @@
+/* TODO: remove rest */
+
 #root {
   max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
-  text-align: center;
 }
 
 .logo {
@@ -16,10 +17,6 @@
 }
 .logo.solid:hover {
   filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
-.card {
-  padding: 2em;
 }
 
 .read-the-docs {
