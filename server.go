@@ -58,7 +58,7 @@ func main() {
 			if err2 != nil {
 				log.Panicf("Parsing failed: %v\n", err2)
 			}
-			_, err3 := connection.Query(context.Background(), "INSERT INTO questions (type, subject, answer) VALUES ($1, $2, $3)", )
+			_, err3 := connection.Query(context.Background(), "INSERT INTO questions (type, subject, answer) VALUES ($1, $2, $3)", parsedBody.Type, parsedBody.Subject, parsedBody.Answer)
 			if err3 != nil {
 				log.Panicf("QueryRow failed: %v\n", err3)
 			}
