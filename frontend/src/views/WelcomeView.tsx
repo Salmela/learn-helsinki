@@ -18,7 +18,9 @@ export const WelcomeView = () => {
       </div>
       <h1>Learn Helsinki</h1>
       <ButtonRow>
-        <PrimaryButton onClick={() => navigate("/question")}>Let's go!</PrimaryButton>
+        <PrimaryButton onClick={() => navigate("/question")}>
+          Let's go!
+        </PrimaryButton>
         <Button onClick={() => navigate("/new_question")}>
           Create new question
         </Button>

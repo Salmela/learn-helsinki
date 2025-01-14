@@ -1,4 +1,4 @@
-import { createSignal } from "solid-js";
+import { createSignal, createResource } from "solid-js";
 import { useNavigate } from "@solidjs/router";
 import { QuestionMap, Coordinate } from "../components/Map";
 import { Button, PrimaryButton, ButtonRow } from "../components/Button";
@@ -32,9 +32,15 @@ const pointInPolygon = (location: Coordinate | null, polygon: Coordinate[]) => {
   return intersections % 2 == 1;
 };
 
+const fetchQuestion = async () => {
+  const response = await fetch(`http://localhost:8082/questions`);
+  return response.json();
+};
+
 export const QuestionView = () => {
   const navigate = useNavigate();
   const [response, setResponse] = createSignal<Coordinate | null>(null);
+  const [question] = createResource("some-id", fetchQuestion);
   const polygon = [
     [60.17289589344101, 24.93902919252459],
     [60.173002620382846, 24.943321029970306],
@@ -47,7 +53,15 @@ export const QuestionView = () => {
   ].map(([lat, lng]) => ({ lat, lng }));
   return (
     <>
-      <h1>Where is Steissi?</h1>
+      <Show when={question.loading}>
+        <h1>Loading...</h1>
+      </Show>
+      <Show when={question.error}>
+        <h1>Internal error</h1>
+      </Show>
+      <Show when={question()}>
+        <h1>Where is {question().subject}?</h1>
+      </Show>
       <QuestionMap setLocation={setResponse} />
       <ButtonRow>
         <Button onClick={() => navigate("/")}>Give up</Button>

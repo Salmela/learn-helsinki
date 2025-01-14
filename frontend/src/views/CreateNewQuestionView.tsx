@@ -11,7 +11,6 @@ export const CreateNewQuestionView = () => {
   const [polygon, setPolygon] = createSignal<Coordinate[]>([]);
 
   const createQuestion = async () => {
-    console.log(polygon);
     const response = fetch("http://localhost:8082/questions", {
       method: "POST",
       body: JSON.stringify({
@@ -21,7 +20,9 @@ export const CreateNewQuestionView = () => {
         answer: JSON.stringify(polygon()),
       }),
     });
-    response.then(() => alert("The new question is saved")).catch(() => alert("Server error happened"));
+    response
+      .then(() => alert("The new question is saved"))
+      .catch(() => alert("Server error happened"));
   };
   return (
     <div>
