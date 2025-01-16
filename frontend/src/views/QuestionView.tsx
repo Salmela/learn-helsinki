@@ -50,6 +50,10 @@ export const QuestionView = () => {
     setIsAnswerCorrect(pointInPolygon(response(), JSON.parse(currentQuestion().answer)));
   };
   const nextQuestion = () => {
+    const lastQuestion = questionIndex() === questions().length - 1;
+    if (lastQuestion) {
+      navigate('/congrats');
+    }
     setResponse(null);
     setIsAnswerCorrect(null);
     setQuestionIndex((value) => value + 1);
@@ -103,4 +107,5 @@ const Result = styled("div")`
 
 const Wrapper = styled("div")(`
   width: 600px;
+  min-height: 700px;
 `);

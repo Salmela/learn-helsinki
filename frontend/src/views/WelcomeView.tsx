@@ -1,7 +1,6 @@
 import { styled } from "solid-styled-components";
 import { useNavigate } from "@solidjs/router";
 import HelsinkiHeroImage from "../assets/helsinki.svg";
-import viteLogo from "/vite.svg";
 import { PrimaryButton, Button } from "../components/Button";
 
 export const WelcomeView = () => {
@@ -31,6 +30,7 @@ const SkylineImage = styled("img")(`
 const Wrapper = styled("div")(`
   text-align: center;
   width: 350px;
+  min-height: 700px;
 `);
 
 const Header = styled("h1")(`

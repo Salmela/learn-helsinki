@@ -47,6 +47,7 @@ export const CreateNewQuestionView = () => {
 
 const Wrapper = styled("div")(`
   width: 600px;
+  min-height: 700px;
 `);
 
 const FullWidthInput = styled(TextInput)(`
