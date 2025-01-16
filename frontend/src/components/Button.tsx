@@ -11,6 +11,7 @@ export const Button = styled("button")(`
   cursor: pointer;
   transition: border-color, background-color 0.25s;
   border-color: var(--dark-color);
+  min-width: 120px;
 
   &:hover:not(:disabled) {
     background: color-mix(in hsl, var(--primary-color), var(--dark-color) 90%);

@@ -1,43 +1,53 @@
 import { styled } from "solid-styled-components";
 import { useNavigate } from "@solidjs/router";
-import solidLogo from "../assets/solid.svg";
+import HelsinkiHeroImage from "../assets/helsinki.svg";
 import viteLogo from "/vite.svg";
-import { PrimaryButton, Button, ButtonRow } from "../components/Button";
+import { PrimaryButton, Button } from "../components/Button";
 
 export const WelcomeView = () => {
   const navigate = useNavigate();
   return (
     <Wrapper>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} class="logo" alt="Vite logo" />
-        </a>
-        <a href="https://solidjs.com" target="_blank">
-          <img src={solidLogo} class="logo solid" alt="Solid logo" />
-        </a>
-      </div>
-      <h1>Learn Helsinki</h1>
-      <Paragraph>This is little game to learn places in Helsinki. It was inspired by Duolingo</Paragraph>
-      <ButtonRow>
+      <SkylineImage src={HelsinkiHeroImage} />
+      <Header>Learn Helsinki</Header>
+      <Paragraph>This little game helps you learn about places around Helsinki and makes you indistinguishable from a long-time dweller of the capital city in no time.</Paragraph>
+      <CenteredButtonRow>
         <PrimaryButton onClick={() => navigate("/question")}>
           Let's go!
         </PrimaryButton>
         <Button onClick={() => navigate("/new_question")}>
           Contribute questions
         </Button>
-      </ButtonRow>
+      </CenteredButtonRow>
       <LicenseParagraph>Content on this site is licensed under a <a href="https://creativecommons.org/public-domain/cc0/">Public Domain license (CC0)</a>.</LicenseParagraph>
     </Wrapper>
   );
 };
+
+const SkylineImage = styled("img")(`
+  width: 350px;
+`);
 
 const Wrapper = styled("div")(`
   text-align: center;
   width: 350px;
 `);
 
+const Header = styled("h1")(`
+  margin-top: 0;
+  margin-bottom: 0;
+`);
+
 const Paragraph = styled("p")(`
+  margin: 24px 0;
   text-align: left;
+`);
+
+const CenteredButtonRow = styled("div")(`
+  margin: 24px 0;
+  display: flex;
+  justify-content: center;
+  gap: 16px;
 `);
 
 const LicenseParagraph = styled("p")(`
