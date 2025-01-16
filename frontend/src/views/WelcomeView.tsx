@@ -17,18 +17,29 @@ export const WelcomeView = () => {
         </a>
       </div>
       <h1>Learn Helsinki</h1>
+      <Paragraph>This is little game to learn places in Helsinki. It was inspired by Duolingo</Paragraph>
       <ButtonRow>
         <PrimaryButton onClick={() => navigate("/question")}>
           Let's go!
         </PrimaryButton>
         <Button onClick={() => navigate("/new_question")}>
-          Create new question
+          Contribute questions
         </Button>
       </ButtonRow>
+      <LicenseParagraph>Content on this site is licensed under a <a href="https://creativecommons.org/public-domain/cc0/">Public Domain license (CC0)</a>.</LicenseParagraph>
     </Wrapper>
   );
 };
 
 const Wrapper = styled("div")(`
   text-align: center;
+  width: 350px;
+`);
+
+const Paragraph = styled("p")(`
+  text-align: left;
+`);
+
+const LicenseParagraph = styled("p")(`
+  opacity: 0.7;
 `);

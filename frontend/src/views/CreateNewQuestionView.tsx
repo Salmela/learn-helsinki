@@ -25,7 +25,7 @@ export const CreateNewQuestionView = () => {
       .catch(() => alert("Server error happened"));
   };
   return (
-    <div>
+    <Wrapper>
       <h1>Create new question</h1>
       <FullWidthInput
         type="text"
@@ -41,9 +41,13 @@ export const CreateNewQuestionView = () => {
           Create
         </PrimaryButton>
       </ButtonRow>
-    </div>
+    </Wrapper>
   );
 };
+
+const Wrapper = styled("div")(`
+  width: 600px;
+`);
 
 const FullWidthInput = styled(TextInput)(`
   width: 100%;

@@ -1,3 +1,4 @@
+import { styled } from "solid-styled-components";
 import { createSignal, createResource } from "solid-js";
 import { useNavigate } from "@solidjs/router";
 import { QuestionMap, Coordinate } from "../components/Map";
@@ -40,40 +41,63 @@ const fetchQuestion = async () => {
 export const QuestionView = () => {
   const navigate = useNavigate();
   const [response, setResponse] = createSignal<Coordinate | null>(null);
-  const [question] = createResource("some-id", fetchQuestion);
-  const polygon = [
-    [60.17289589344101, 24.93902919252459],
-    [60.173002620382846, 24.943321029970306],
-    [60.17195668140074, 24.94338540753199],
-    [60.17193533536047, 24.94254849923009],
-    [60.17072926155439, 24.94269871354068],
-    [60.17071858813724, 24.94029528457108],
-    [60.17225552450813, 24.940166529447716],
-    [60.17226619742596, 24.93902919252459],
-  ].map(([lat, lng]) => ({ lat, lng }));
+  const [isAnswerCorrect, setIsAnswerCorrect] = createSignal<boolean | null>(null);
+  const [question, {refetch: refetchQuestion}] = createResource("some-id", fetchQuestion);
+
+  const checkAnswer = () => {
+    setIsAnswerCorrect(pointInPolygon(response(), JSON.parse(question().answer)));
+  };
+  const nextQuestion = () => {
+    setResponse(null);
+    setIsAnswerCorrect(null);
+    refetchQuestion();
+  };
   return (
-    <>
-      <Show when={question.loading}>
-        <h1>Loading...</h1>
-      </Show>
-      <Show when={question.error}>
-        <h1>Internal error</h1>
-      </Show>
-      <Show when={question()}>
-        <h1>Where is {question().subject}?</h1>
-      </Show>
-      <QuestionMap setLocation={setResponse} />
-      <ButtonRow>
-        <Button onClick={() => navigate("/")}>Give up</Button>
-        <PrimaryButton
-          disabled={!response()}
-          onClick={() =>
-            alert(pointInPolygon(response(), polygon) ? "Correct" : "Incorrect")
-          }
-        >
-          Check
-        </PrimaryButton>
-      </ButtonRow>
-    </>
+    <Wrapper>
+      <h1>
+        <Show when={question.loading}>
+          &nbsp;{/* This exists to prevent page movememnt*/}
+        </Show>
+        <Show when={question.error}>
+          Internal error
+        </Show>
+        <Show when={!question.loading && question()}>
+          Where is {question().subject}?
+        </Show>
+      </h1>
+      <Result correct={isAnswerCorrect()}>
+        <QuestionMap setLocation={setResponse} />
+        <ButtonRow>
+          <Button onClick={() => navigate("/")}>Give up</Button>
+          <Show when={isAnswerCorrect() === null}>
+            <PrimaryButton
+              disabled={!response()}
+              onClick={checkAnswer}
+            >
+              Check
+            </PrimaryButton>
+          </Show>
+          <Show when={isAnswerCorrect() !== null}>
+            <PrimaryButton onClick={nextQuestion}>
+              Next
+            </PrimaryButton>
+          </Show>
+        </ButtonRow>
+        <Show when={isAnswerCorrect() !== null} fallback={<p>&nbsp;</p>}>
+          <p>{isAnswerCorrect() ? "That was correct" : "That was incorrect"}</p>
+        </Show>
+      </Result>
+    </Wrapper>
   );
 };
+
+const Result = styled("div")`
+  margin: -8px;
+  padding: 8px;
+  background-color: ${(props) => props.correct ? "#366846" : props.correct == false ? "#762A27" : 'transparent'};
+  border-radius: 8px;
+`;
+
+const Wrapper = styled("div")(`
+  width: 600px;
+`);

@@ -10,10 +10,10 @@ import (
 	"net/http"
 )
 
-type QuestionCreationRequest struct {
-	Type    string
-	Subject string
-	Answer  string
+type Question struct {
+	Type    string `json:"type"`
+	Subject string `json:"subject"`
+	Answer  string `json:"answer"`
 }
 
 func initDatabase(connection *pgxpool.Pool) {
@@ -53,19 +53,28 @@ func main() {
 			if err != nil {
 				log.Panicf("Reading response body failed: %v\n", err)
 			}
-			var parsedBody QuestionCreationRequest
+			var parsedBody Question
 			err2 := json.Unmarshal(body, &parsedBody)
 			if err2 != nil {
 				log.Panicf("Parsing failed: %v\n", err2)
 			}
 			_, err3 := connection.Query(context.Background(), "INSERT INTO questions (type, subject, answer) VALUES ($1, $2, $3)", parsedBody.Type, parsedBody.Subject, parsedBody.Answer)
 			if err3 != nil {
-				log.Panicf("QueryRow failed: %v\n", err3)
+				log.Panicf("Query failed: %v\n", err3)
 			}
 			fmt.Fprintf(response, string(body))
 		} else {
-			// We are sending the answer polygon to frontend which is not really secure nor necessary, but it makes the code easier for now
-			fmt.Fprintf(response, "{\"type\": \"where\", \"subject\": \"steissi\", \"answer\": [[60.17289589344101,24.93902919252459],[60.173002620382846,24.943321029970306],[60.17195668140074,24.94338540753199],[60.17193533536047,24.94254849923009],[60.17072926155439,24.94269871354068],[60.17071858813724,24.94029528457108],[60.17225552450813,24.940166529447716],[60.17226619742596,24.93902919252459]]}")
+			var question Question
+			err := connection.QueryRow(context.Background(), "SELECT type, subject, answer FROM questions ORDER BY random() LIMIT 1").Scan(&question.Type, &question.Subject, &question.Answer)
+			if err != nil {
+				log.Panicf("QueryRow failed: %v\n", err)
+			}
+			data, err2 := json.Marshal(question)
+			if err2 != nil {
+				log.Panicf("Json stringify failed: %v\n", err2)
+				return
+			}
+			response.Write(data)
 		}
 	})
 
