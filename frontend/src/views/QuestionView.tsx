@@ -41,28 +41,31 @@ const fetchQuestion = async () => {
 export const QuestionView = () => {
   const navigate = useNavigate();
   const [response, setResponse] = createSignal<Coordinate | null>(null);
+  const [questionIndex, setQuestionIndex] = createSignal(0);
   const [isAnswerCorrect, setIsAnswerCorrect] = createSignal<boolean | null>(null);
-  const [question, {refetch: refetchQuestion}] = createResource("some-id", fetchQuestion);
+  const [questions] = createResource("some-id", fetchQuestion);
 
+  const currentQuestion = () => questions()[questionIndex()];
   const checkAnswer = () => {
-    setIsAnswerCorrect(pointInPolygon(response(), JSON.parse(question().answer)));
+    setIsAnswerCorrect(pointInPolygon(response(), JSON.parse(currentQuestion().answer)));
   };
   const nextQuestion = () => {
     setResponse(null);
     setIsAnswerCorrect(null);
+    setQuestionIndex((value) => value + 1);
     refetchQuestion();
   };
   return (
     <Wrapper>
       <h1>
-        <Show when={question.loading}>
-          &nbsp;{/* This exists to prevent page movememnt*/}
+        <Show when={questions.loading}>
+          &nbsp;{/* This exists to prevent page movement*/}
         </Show>
-        <Show when={question.error}>
-          Internal error
+        <Show when={questions.error}>
+          Something went wrong :’(
         </Show>
-        <Show when={!question.loading && question()}>
-          Where is {question().subject}?
+        <Show when={!questions.loading && currentQuestion()}>
+          Where is {currentQuestion().subject}?
         </Show>
       </h1>
       <Result correct={isAnswerCorrect()}>

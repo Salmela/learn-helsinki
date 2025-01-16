@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"io/ioutil"
 	"log"
@@ -64,12 +65,17 @@ func main() {
 			}
 			fmt.Fprintf(response, string(body))
 		} else {
-			var question Question
-			err := connection.QueryRow(context.Background(), "SELECT type, subject, answer FROM questions ORDER BY random() LIMIT 1").Scan(&question.Type, &question.Subject, &question.Answer)
+			rows, err := connection.Query(context.Background(), "SELECT type, subject, answer FROM questions ORDER BY random() LIMIT 5")
 			if err != nil {
 				log.Panicf("QueryRow failed: %v\n", err)
 			}
-			data, err2 := json.Marshal(question)
+
+			questions, err := pgx.CollectRows(rows, pgx.RowToStructByName[Question])
+			if err != nil {
+				log.Panicf("Collecting rows failed: %v", err)
+			}
+
+			data, err2 := json.Marshal(questions)
 			if err2 != nil {
 				log.Panicf("Json stringify failed: %v\n", err2)
 				return
