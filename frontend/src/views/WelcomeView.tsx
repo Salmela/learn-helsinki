@@ -9,7 +9,11 @@ export const WelcomeView = () => {
     <Wrapper>
       <SkylineImage src={HelsinkiHeroImage} />
       <Header>Learn Helsinki</Header>
-      <Paragraph>This little game helps you learn about places around Helsinki and makes you indistinguishable from a long-time dweller of the capital city in no time.</Paragraph>
+      <Paragraph>
+        This little game helps you learn about places around Helsinki and makes
+        you indistinguishable from a long-time dweller of the capital city in no
+        time.
+      </Paragraph>
       <CenteredButtonRow>
         <PrimaryButton onClick={() => navigate("/question")}>
           Let's go!
@@ -18,7 +22,13 @@ export const WelcomeView = () => {
           Contribute questions
         </Button>
       </CenteredButtonRow>
-      <LicenseParagraph>Content on this site is licensed under a <a href="https://creativecommons.org/public-domain/cc0/">Public Domain license (CC0)</a>.</LicenseParagraph>
+      <LicenseParagraph>
+        Content on this site is licensed under a{" "}
+        <a href="https://creativecommons.org/public-domain/cc0/">
+          Public Domain license (CC0)
+        </a>
+        .
+      </LicenseParagraph>
     </Wrapper>
   );
 };

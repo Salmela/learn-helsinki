@@ -15,17 +15,21 @@ export const QuestionView = () => {
   const navigate = useNavigate();
   const [response, setResponse] = createSignal<Coordinate | null>(null);
   const [questionIndex, setQuestionIndex] = createSignal(0);
-  const [isAnswerCorrect, setIsAnswerCorrect] = createSignal<boolean | null>(null);
+  const [isAnswerCorrect, setIsAnswerCorrect] = createSignal<boolean | null>(
+    null,
+  );
   const [questions] = createResource("some-id", fetchQuestion);
 
   const currentQuestion = () => questions()[questionIndex()];
   const checkAnswer = () => {
-    setIsAnswerCorrect(pointInPolygon(response(), JSON.parse(currentQuestion().answer)));
+    setIsAnswerCorrect(
+      pointInPolygon(response(), JSON.parse(currentQuestion().answer)),
+    );
   };
   const nextQuestion = () => {
     const lastQuestion = questionIndex() === questions().length - 1;
     if (lastQuestion) {
-      navigate('/congrats');
+      navigate("/congrats");
     }
     setResponse(null);
     setIsAnswerCorrect(null);
@@ -38,9 +42,7 @@ export const QuestionView = () => {
         <Show when={questions.loading}>
           &nbsp;{/* This exists to prevent page movement*/}
         </Show>
-        <Show when={questions.error}>
-          Something went wrong :’(
-        </Show>
+        <Show when={questions.error}>Something went wrong :’(</Show>
         <Show when={!questions.loading && currentQuestion()}>
           Where is {currentQuestion().subject}?
         </Show>
@@ -50,17 +52,12 @@ export const QuestionView = () => {
         <ButtonRow>
           <Button onClick={() => navigate("/")}>Give up</Button>
           <Show when={isAnswerCorrect() === null}>
-            <PrimaryButton
-              disabled={!response()}
-              onClick={checkAnswer}
-            >
+            <PrimaryButton disabled={!response()} onClick={checkAnswer}>
               Check
             </PrimaryButton>
           </Show>
           <Show when={isAnswerCorrect() !== null}>
-            <PrimaryButton onClick={nextQuestion}>
-              Next
-            </PrimaryButton>
+            <PrimaryButton onClick={nextQuestion}>Next</PrimaryButton>
           </Show>
         </ButtonRow>
         <Show when={isAnswerCorrect() !== null} fallback={<p>&nbsp;</p>}>
@@ -74,7 +71,12 @@ export const QuestionView = () => {
 const Result = styled("div")`
   margin: -8px;
   padding: 8px;
-  background-color: ${(props) => props.correct ? "#366846" : props.correct == false ? "#762A27" : 'transparent'};
+  background-color: ${(props) =>
+    props.correct
+      ? "#366846"
+      : props.correct == false
+        ? "#762A27"
+        : "transparent"};
   border-radius: 8px;
 `;
 
