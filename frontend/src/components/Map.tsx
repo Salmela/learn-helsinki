@@ -1,14 +1,10 @@
 import { onMount } from "solid-js";
 import L, { Map, Marker, Polygon } from "leaflet";
+import { Coordinate } from "../types";
 import "leaflet/dist/leaflet.css";
 
 interface Props {
   init: (map: Map) => void;
-}
-
-export interface Coordinate {
-  lat: number;
-  lng: number;
 }
 
 export const BaseMap = (props: Props) => {
