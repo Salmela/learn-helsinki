@@ -13,6 +13,7 @@ const fetchQuestion = async () => {
 
 export const QuestionView = () => {
   const navigate = useNavigate();
+  const [state, setState] = createSignal<"select" | "answer">("select");
   const [response, setResponse] = createSignal<Coordinate | null>(null);
   const [questionIndex, setQuestionIndex] = createSignal(0);
   const [isAnswerCorrect, setIsAnswerCorrect] = createSignal<boolean | null>(
@@ -21,10 +22,13 @@ export const QuestionView = () => {
   const [questions] = createResource("some-id", fetchQuestion);
 
   const currentQuestion = () => questions()[questionIndex()];
+  const answerPolygon = () =>
+    isAnswerCorrect() === false ? JSON.parse(currentQuestion().answer) : null;
   const checkAnswer = () => {
     setIsAnswerCorrect(
       isPointInPolygon(response(), JSON.parse(currentQuestion().answer)),
     );
+    setState("answer");
   };
   const nextQuestion = () => {
     const lastQuestion = questionIndex() === questions().length - 1;
@@ -34,7 +38,9 @@ export const QuestionView = () => {
     setResponse(null);
     setIsAnswerCorrect(null);
     setQuestionIndex((value) => value + 1);
+    setState("select");
   };
+
   return (
     <Wrapper>
       <h1>
@@ -47,7 +53,11 @@ export const QuestionView = () => {
         </Show>
       </h1>
       <Result correct={isAnswerCorrect()}>
-        <QuestionMap setLocation={setResponse} />
+        <QuestionMap
+          state={state}
+          setLocation={setResponse}
+          answerPolygon={answerPolygon}
+        />
         <ButtonRow>
           <Button onClick={() => navigate("/")}>Give up</Button>
           <Show when={isAnswerCorrect() === null}>

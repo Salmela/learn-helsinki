@@ -1,4 +1,4 @@
-import { onMount } from "solid-js";
+import { on, onMount, createEffect } from "solid-js";
 import L, { Map, Marker, Polygon } from "leaflet";
 import { Coordinate } from "../types";
 import "leaflet/dist/leaflet.css";
@@ -35,11 +35,17 @@ export const BaseMap = (props: Props) => {
 };
 
 export const QuestionMap = (props: {
+  state: () => "select" | "answer";
+  answerPolygon: () => Coordinate[];
   setLocation: (location: Coordinate) => void;
 }) => {
+  let answerMarker: Marker | null = null;
+  let activeMap: Map | null = null;
+
   const init = (map: Map) => {
-    let answerMarker: Marker | null = null;
+    activeMap = map;
     map.on("click", (e) => {
+      if (props.state() === "answer") return;
       if (answerMarker) {
         answerMarker.remove();
       }
@@ -48,15 +54,38 @@ export const QuestionMap = (props: {
       answerMarker.addTo(map);
     });
   };
+
+  let answerPolygonOnMap: Polygon | null = null;
+  createEffect(
+    on(props.answerPolygon, (answer) => {
+      if (!activeMap) return;
+      if (answerPolygonOnMap) {
+        answerPolygonOnMap.remove();
+      }
+      if (answer) {
+        answerPolygonOnMap = L.polygon(answer, { color: "red" });
+        answerPolygonOnMap.addTo(activeMap);
+      }
+    }),
+  );
+  createEffect(
+    on(props.state, (state) => {
+      if (state === "select") {
+        if (answerMarker) {
+          answerMarker.remove();
+        }
+      }
+    }),
+  );
   return <BaseMap init={init} />;
 };
 
 export const CreateQuestionMap = (props: {
   setPolygon: (points: Coordinate[]) => void;
 }) => {
+  let mapPolygon: Polygon | null = null;
+  let points: Coordinate[] = [];
   const init = (map: Map) => {
-    let mapPolygon: Polygon | null = null;
-    let points: Coordinate[] = [];
     map.on("click", (e) => {
       if (mapPolygon) {
         mapPolygon.remove();
