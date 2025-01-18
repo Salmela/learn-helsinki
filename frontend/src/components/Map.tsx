@@ -1,3 +1,4 @@
+import { styled } from "solid-styled-components";
 import { on, onMount, createEffect } from "solid-js";
 import L, { Map, Marker, Polygon } from "leaflet";
 import { Coordinate } from "../types";
@@ -31,7 +32,7 @@ export const BaseMap = (props: Props) => {
     );
     layer.addTo(map);
   });
-  return <div id="map" style="height: 400px;"></div>;
+  return <MapContainer id="map" />;
 };
 
 export const QuestionMap = (props: {
@@ -98,3 +99,7 @@ export const CreateQuestionMap = (props: {
   };
   return <BaseMap init={init} />;
 };
+
+const MapContainer = styled("div")(`
+  height: 400px;
+`);
