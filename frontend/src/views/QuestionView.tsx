@@ -23,7 +23,7 @@ export const QuestionView = () => {
   const currentQuestion = () => questions()[questionIndex()];
   const checkAnswer = () => {
     setIsAnswerCorrect(
-      pointInPolygon(response(), JSON.parse(currentQuestion().answer)),
+      isPointInPolygon(response(), JSON.parse(currentQuestion().answer)),
     );
   };
   const nextQuestion = () => {
@@ -34,7 +34,6 @@ export const QuestionView = () => {
     setResponse(null);
     setIsAnswerCorrect(null);
     setQuestionIndex((value) => value + 1);
-    refetchQuestion();
   };
   return (
     <Wrapper>
