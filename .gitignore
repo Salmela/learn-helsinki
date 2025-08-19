@@ -1,3 +1,6 @@
 .*.sw?
 /frontend/node_modules
 /frontend/dist
+/cache
+/pkg
+/db.sql
